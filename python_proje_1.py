@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
+
 st.set_page_config(page_title="Rule Based Classification of Customer's Data", page_icon="🖖")
 # st.title("Rule Based Classification of Customer's Data")
 st.markdown("<h2 style='text-align: center; color: grey;'>Rule Based Classification of Customer's Data </h2>", unsafe_allow_html=True)
@@ -28,7 +29,9 @@ st.subheader("Analysis of the variables")
 pd.set_option("display.width", 500)
 pd.set_option("display.max_columns", None)
 
-df = pd.read_csv("C:/Users/hakan/PycharmProjects/pythonProject/persona.csv")
+main_file_name = 'persona.csv' # change it to the name of your excel file
+
+df = pd.read_csv(main_file_name)
 df.info()
 df.head()
 #df.describe().T
