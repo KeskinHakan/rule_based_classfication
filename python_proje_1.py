@@ -136,7 +136,7 @@ agg_df3 = new_df.groupby(["SEGMENT"]).agg({"PRICE": ["mean", "max", "sum"]})
 # Mission 8
 
 st.sidebar.header("New customer information:")
-country = st.sidebar.selectbox("Country of new user: ", {"Bra", "Tur", "Usa", "Can", "Deu","Fra"})
+country = st.sidebar.selectbox("Country of new user: ", {"BRA", "TUR", "USA", "CAN", "DEU","FRA"})
 phone_type = st.sidebar.selectbox("Operating System of new user: ", {"Android", "IOS"})
 gender = st.sidebar.selectbox("Gender of new user: ", {"Female", "Male"})
 age = st.sidebar.number_input("Age of new user",value=18, step=1)
