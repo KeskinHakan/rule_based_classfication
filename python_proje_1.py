@@ -13,7 +13,8 @@ st.set_page_config(page_title="Rule Based Classification of Customer's Data", pa
 # st.title("Rule Based Classification of Customer's Data")
 st.markdown("<h2 style='text-align: center; color: grey;'>Rule Based Classification of Customer's Data </h2>", unsafe_allow_html=True)
 """
-This application is developed to find out Segment and Price of the New Customer' informations.
+This application is developed to find out Segment and Price of the New Customer' informations for the company.
+This way, company can predict the income by new customers
 
 To use the app you should choose at the following steps below:
 
@@ -152,9 +153,9 @@ new_user_3 = (country + "_"+ phone_type +"_"+ gender+ "_"+age_cat).upper()
 price = new_df[new_df["customers_level_based"] == new_user_3].reset_index(drop=True)
 st.sidebar.markdown(new_user_3)
 
-st.info("Customer ID: " + str(new_user_3))
-st.info("Mean price for the new customer: " + str(format(price["PRICE"][0], ".2f")) + "$")
-st.success("Segment for the user's choice: " + str(price["SEGMENT"][0]))
+st.info("New Customer ID: " + str(new_user_3))
+st.success("Mean Price for New Customer: " + str(format(price["PRICE"][0], ".2f")) + "$")
+st.success("Segment for New Customer: " + str(price["SEGMENT"][0]))
 
 hide_menu_style = """
         <style>
