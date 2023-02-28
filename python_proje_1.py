@@ -32,11 +32,6 @@ pd.set_option("display.max_columns", None)
 main_file_name = 'persona.csv' # change it to the name of your excel file
 
 df = pd.read_csv(main_file_name)
-df.info()
-df.head()
-#df.describe().T
-df.isnull().sum()
-#df.columns
 
 ### Check df fonksiyonu ile hızlı bir bakış atabiliriz
 def check_df(dataframe, head=5):
@@ -61,57 +56,9 @@ def ratio_calculater(dataframe,col):
 for col in df.columns:
     ratio_calculater(df, col)
 
-# Q3
-
-print("Total number of unique Price is: ", df["PRICE"].nunique())
-
-# Q4
-
-ratio_calculater(df, "PRICE")
-
-# Q5
-
-ratio_calculater(df, "COUNTRY")
-
-# Q6
-def total_earning(dataframe, col_name):
-    print(dataframe.groupby(col_name).agg({"PRICE": "sum"}))
-
-total_earning(df,"COUNTRY")
-
-# Q7
-
-def count_sales(dataframe, col_name):
-    print(dataframe.groupby(col_name).agg({"PRICE": "count"}))
-
-count_sales(df,"SOURCE")
-
-# Q8
-
-def mean_prices(dataframe, col_name):
-    print(dataframe.groupby(col_name).agg({"PRICE": "mean"}))
-
-mean_prices(df,"COUNTRY")
-
-# Q9
-
-mean_prices(df,"SOURCE")
-
-# Q10
-
-def fragility_curve(dataframe, col_name1, col_name2):
-    print(dataframe.groupby([col_name1, col_name2]).agg({"PRICE": "mean"}))
-
-fragility_curve(df,"COUNTRY", "SOURCE")
-
-# Mission 2 & 3
-
 agg_df = pd.DataFrame(df.groupby(["COUNTRY", "SOURCE", "SEX", "AGE"]).agg({"PRICE": "mean"})).sort_values("PRICE", ascending= False)
 
-# Mission 4
 agg_df = agg_df.reset_index()
-
-# Mission 5
 
 
 def grab_col_names(df, cat_th=10, car_th=20):
@@ -167,28 +114,24 @@ def num_summary(dataframe, num_col, plot=False):
 for col in num_col:
     num_summary(df, col, plot=True)
 
-agg_df["AGE_CAT"] = pd.cut(agg_df["AGE"], [0, 18, 23, 30, 40, 70], labels=['0_18', '19_23', '24_30','31_40', '41_70'])
+agg_df["AGE_CAT"] = pd.cut(agg_df["AGE"], [0, 18, 23, 30, 40, 70], labels=['0_18', '19_23', '24_30','31_40', '41_70']).astype("O")
 
-agg_df["AGE_CAT"] = agg_df["AGE_CAT"].astype("O")
+customers_level_based = pd.DataFrame([agg_df["COUNTRY"][x] + "_" + agg_df["SOURCE"][x] + "_" + agg_df["SEX"][x] + "_" + agg_df["AGE_CAT"][x]
+                         for x in range(len(agg_df))])
 
-customers_level_based = [agg_df["COUNTRY"][x] + "_" + agg_df["SOURCE"][x] + "_" + agg_df["SEX"][x] + "_" + agg_df["AGE_CAT"][x]
-                         for x in range(len(agg_df))]
-
-customers_level_based = pd.DataFrame(customers_level_based)
 customers_level_based.columns = ["customers_level_based"]
 customers_level_based["customers_level_based"] = customers_level_based["customers_level_based"].str.upper()
 customers_level_based["PRICE"] = agg_df["PRICE"] # Mean Price
-
 customers_level_based.groupby(["customers_level_based"]).agg({"PRICE": "mean"})
 
 agg_df = customers_level_based.groupby(["customers_level_based"]).agg({"PRICE": "mean"})
-agg_df2 = agg_df.reset_index()
+new_df = agg_df.reset_index()
 
-segment = pd.qcut(agg_df2["PRICE"], 4, labels = ["D","C","B","A"])
+segment = pd.qcut(new_df["PRICE"], 4, labels = ["D","C","B","A"])
 
-agg_df2["SEGMENT"] = segment
+new_df["SEGMENT"] = segment
 
-agg_df3 = agg_df2.groupby(["SEGMENT"]).agg({"PRICE": ["mean", "max", "sum"]})
+agg_df3 = new_df.groupby(["SEGMENT"]).agg({"PRICE": ["mean", "max", "sum"]})
 
 # Mission 8
 
@@ -206,7 +149,7 @@ age_cat = input_dataframe["AGE_CAT"][0]
 
 st.sidebar.markdown(("New Customer Definition:"))
 new_user_3 = (country + "_"+ phone_type +"_"+ gender+ "_"+age_cat).upper()
-price = agg_df2[agg_df2["customers_level_based"] == new_user_3].reset_index(drop=True)
+price = new_df[new_df["customers_level_based"] == new_user_3].reset_index(drop=True)
 st.sidebar.markdown(new_user_3)
 
 st.info("Customer ID: " + str(new_user_3))
